@@ -12,9 +12,9 @@ import { Server } from 'socket.io';
 import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 
-import { config } from './config';
-import applicationRoute from './routes';
-import { IErrorResponse, CustomError } from './shared/globals/helpers/error-handler';
+import { config } from '@root/config';
+import applicationRoute from '@root/routes';
+import { IErrorResponse, CustomError } from '@global/helpers/error-handler';
 
 const log = config.createLogger('server');
 
@@ -81,7 +81,7 @@ export class TBServer {
 			this.startHttpServer(httpServer);
 			this.socketIOConnections(socketIO);
 		} catch (err) {
-			console.log(err);
+			log.error(err);
 		}
 	}
 
@@ -109,5 +109,7 @@ export class TBServer {
 		});
 	}
 
-	private socketIOConnections(io: Server): void {}
+	private socketIOConnections(io: Server): void {
+		console.log(io);
+	}
 }
