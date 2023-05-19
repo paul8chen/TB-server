@@ -1,8 +1,8 @@
 import express, { Express } from 'express';
 
-import { TBServer } from './setupServer';
-import databaseConnection from './setupDatabase';
-import { config } from './config';
+import { TBServer } from '@root/setupServer';
+import databaseConnection from '@root/setupDatabase';
+import { config } from '@root/config';
 
 class Application {
 	public async initialize(): Promise<void> {
@@ -15,6 +15,7 @@ class Application {
 
 	private loadConfig(): void {
 		config.validateConfig();
+		config.cloudinaryConfig();
 	}
 }
 
