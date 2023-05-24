@@ -1,0 +1,105 @@
+@baseUrl = http://localhost:5000
+
+@urlPath=api/v1/stock
+
+@tickCartId = {{addTickCart.response.body.data.id}}
+@tickId ={{addTick.response.body.data.id}}
+### Load Historical Data
+GET {{baseUrl}}/{{urlPath}}/load-stock
+Content-Type:application/json
+withCredentials:true
+
+### Get Historical Data
+GET {{baseUrl}}/{{urlPath}}/get-stock
+Content-Type:application/json
+withCredentials:true
+
+### Get Last N Month Data
+GET {{baseUrl}}/{{urlPath}}/get-stock/3
+Content-Type:application/json
+withCredentials:true
+
+### add price on the speific Tickid
+POST {{baseUrl}}/{{urlPath}}/add-price
+Content-Type:application/json
+withCredentials:true
+
+{
+	"price":100,
+	"TickId":"{{tickId}}"
+}
+
+### udpate price on the speific Tickid
+PATCH {{baseUrl}}/{{urlPath}}/update-price
+Content-Type:application/json
+withCredentials:true
+
+{
+	"price":100,
+	"newPrice":500,
+	"TickId":"{{tickId}}"
+}
+
+### delete price on the speific Tickid
+POST {{baseUrl}}/{{urlPath}}/delete-price
+Content-Type:application/json
+withCredentials:true
+
+{
+	"price":500,
+	"TickId":"{{tickId}}"
+}
+
+### add ma on the speific tick
+POST {{baseUrl}}/{{urlPath}}/add-ma
+Content-Type:application/json
+withCredentials:true
+
+{
+	"param":20,
+	"TickId":"{{tickId}}"
+}
+
+###add tick on the speific tickCart
+# @name addTick
+POST {{baseUrl}}/{{urlPath}}/add-tick
+Content-Type:application/json
+withCredentials:true
+
+{
+	"tick":"BTCUSDT",
+	"open":100,
+	"close":105,
+	"low":98,
+	"high":120,
+	"TickCartId":"{{tickCartId}}"
+}
+
+###delete tick by tick name
+POST {{baseUrl}}/{{urlPath}}/delete-tick
+Content-Type:application/json
+withCredentials:true
+
+{
+	"tick":"BTCUSDT",
+	"TickCartId":"{{tickCartId}}"
+}
+
+###
+# @name addTickCart
+POST {{baseUrl}}/{{urlPath}}/add-tickCart
+Content-Type:application/json
+withCredentials:true
+
+{
+	"cartName":"crypto"
+}
+
+###delete tickCart on the speific user
+POST {{baseUrl}}/{{urlPath}}/delete-tickCart
+Content-Type:application/json
+withCredentials:true
+
+{
+	"cartName":"crypto"
+}

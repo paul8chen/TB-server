@@ -17,6 +17,14 @@ class Config {
 	public CLOUND_API_KEY: string = process.env.CLOUND_API_KEY || '';
 	public CLOUND_API_SECRET: string = process.env.CLOUND_API_SECRET || '';
 	public BASE_PATH: string = process.env.BASE_PATH || '';
+	public MAILTRAP_USER: string = process.env.MAILTRAP_USER || '';
+	public MAILTRAP_PASS: string = process.env.MAILTRAP_PASS || '';
+	public SG_API_KEY: string = process.env.SG_API_KEY || '';
+	public MYSQL_HOST: string = process.env.MYSQL_HOST || '';
+	public MYSQL_PORT: string = process.env.MYSQL_PORT || '';
+	public MYSQL_USERNAME: string = process.env.MYSQL_USERNAME || '';
+	public MYSQL_DATABASENAME: string = process.env.MYSQL_DATABASENAME || '';
+	public MYSQL_PASSWORD: string = process.env.MYSQL_PASSWORD || '';
 
 	public validateConfig(): void {
 		for (const [key, val] of Object.entries(this)) {

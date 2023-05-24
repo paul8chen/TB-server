@@ -12,7 +12,9 @@ class Authmiddleware {
 		const { token } = req.session;
 		try {
 			const payload = jwt.verify(token, config.JWT_TOKEN) as AuthPayload;
+
 			req.currentUser = payload;
+
 		} catch (err) {
 			throw new NotAuthorizedError('Authentication failed. Please login again.');
 		}
@@ -21,7 +23,28 @@ class Authmiddleware {
 	}
 
 	public checkAuthentication(req: Request, res: Response, next: NextFunction): void {
-		if (!req.currentUser) throw new NotAuthorizedError('You are not login. Please login to continue.');
+		if (!req.currentUser) throw new NotAuthorizedError('You are not login. Please login to continue!');
+
+		next();
+	}
+
+	public isLoggedin(req: Request, res: Response, next: NextFunction): void | NextFunction {
+		if (!req.session?.token) return next();
+
+		const { token } = req.session;
+		try {
+			const payload = jwt.verify(token, config.JWT_TOKEN) as AuthPayload;
+			req.currentUser = payload;
+		} catch (err) {
+			return next();
+		}
+
+		next();
+	}
+
+	public isAdmin(req: Request, res: Response, next: NextFunction): void {
+
+		if (req.currentUser!.user !== 'admin') throw new NotAuthorizedError('You are not authorized for this route.');
 
 		next();
 	}

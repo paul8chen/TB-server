@@ -12,7 +12,7 @@ type IBaseJobData = IAuthJob | IUserJob;
 let bullAdapters: BullAdapter[] = [];
 export let serverAdapter: ExpressAdapter;
 
-export abstract class BaseQueue {
+export abstract class BaseQueue<T> {
 	queue: Queue.Queue;
 	log: Logger;
 
@@ -43,7 +43,7 @@ export abstract class BaseQueue {
 		});
 	}
 
-	protected addJob(name: string, data: IBaseJobData): void {
+	protected addJob(name: string, data: T): void {
 		this.queue.add(name, data, { attempts: 3, backoff: { type: 'fixed', delay: 5000 } });
 	}
 

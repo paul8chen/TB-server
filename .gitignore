@@ -1,6 +1,12 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
+### Customize Ignore ###
+data/
+password.ts
+email.queue.ts
+email.worker.ts
+
 ### Node ###
 # Logs
 logs
