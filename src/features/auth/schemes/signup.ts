@@ -23,6 +23,9 @@ const signupSchema: ObjectSchema = Joi.object().keys({
 	}),
 	avatarImage: Joi.string().required().messages({
 		'any.required': 'Avatar image is required'
+	}),
+	user: Joi.string().messages({
+		'string.base': 'user must be of type string'
 	})
 });
 

@@ -110,6 +110,6 @@ export class TBServer {
 	}
 
 	private socketIOConnections(io: Server): void {
-		console.log(io);
+		// console.log(io);
 	}
 }

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 
 export class Logout {
-	public clearSession(req: Request, res: Response): void {
+	public update(req: Request, res: Response): void {
 		if (!req.session) return;
 
 		req.session.token = null;

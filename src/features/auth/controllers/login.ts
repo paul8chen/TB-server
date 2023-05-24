@@ -38,11 +38,12 @@ export class Login {
 	}
 
 	private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
-		const { uId, email, username, avatarColor } = data;
+		const { uId, email, username, avatarColor, user } = data;
 
 		const token = jwt.sign(
 			{
 				userId: userObjectId,
+				user,
 				uId,
 				email,
 				username,
