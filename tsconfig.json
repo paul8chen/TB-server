@@ -23,6 +23,7 @@
 		"paths": {
 			"@user/*": ["src/features/user/*"],
 			"@auth/*": ["src/features/auth/*"],
+			"@stock/*": ["src/features/stock/*"],
 			"@global/*": ["src/shared/globals/*"],
 			"@service/*": ["src/shared/services/*"],
 			"@socket/*": ["src/shared/sockets/*"],

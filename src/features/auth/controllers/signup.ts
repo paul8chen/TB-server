@@ -16,6 +16,7 @@ import { UserCache } from '@service/redis/user.cache';
 import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
+import { emailQueue } from '@service/queues/email.queue';
 
 const userCache = new UserCache();
 
@@ -23,6 +24,9 @@ export class SignUp {
 	@joiValidation(signupSchema)
 	public async create(req: Request, res: Response): Promise<void> {
 		const { username, email, password, avatarColor, avatarImage } = req.body;
+		let { user } = req.body;
+		user ??= 'user';
+
 		const checkIfUserExist = await authService.getUserByUsernameOrEmail(username, email);
 
 		if (checkIfUserExist) throw new BadRequestError('Username/Email already exists.');
@@ -31,7 +35,7 @@ export class SignUp {
 		const userObjectId = new ObjectId();
 		const uId = '' + Helpers.generateRandomInt(12);
 
-		const authData = SignUp.prototype.signupDataToAuthData({ _id: authObjectId, uId, username, email, password, avatarColor });
+		const authData = SignUp.prototype.signupDataToAuthData({ _id: authObjectId, uId, username, email, password, avatarColor, user });
 
 		// Upload user profile image to cloudinary
 		const uploadResult = await uploads(avatarImage, '' + userObjectId, true, true);
@@ -48,19 +52,30 @@ export class SignUp {
 		authQueue.addAuthJob('addAuthToDB', { value: authData });
 		userQueue.addUserJob('addUserToDB', { value: userDataWOAuth });
 
-		const token = SignUp.prototype.signupToken(authData, userObjectId);
+		// Send signup eamil to user
+		const emailOptions = {
+			from: 'TradingBook',
+			to: email,
+			subject: 'Test',
+			text: 'Welcome to TradingBook',
+			html: '<b>Welcome to TradingBook</b>'
+		};
 
+		emailQueue.addEmailJob('sendSignupEmail', emailOptions);
+
+		const token = SignUp.prototype.signupToken(authData, userObjectId);
 		req.session = { token };
 
 		res.status(HTTP_STATUS.CREATED).json({ message: 'User created successfully', userDataWOAuth, token });
 	}
 
 	private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
-		const { uId, email, username, avatarColor } = data;
+		const { uId, email, username, avatarColor, user } = data;
 
 		const token = jwt.sign(
 			{
 				userId: userObjectId,
+				user,
 				uId,
 				email,
 				username,
@@ -73,9 +88,10 @@ export class SignUp {
 	}
 
 	private signupDataToAuthData(data: ISignUpData): IAuthDocument {
-		const { _id, uId, username, email, password, avatarColor } = data;
+		const { _id, uId, username, email, password, avatarColor, user } = data;
 
 		const authData = {
+			user,
 			_id,
 			uId,
 			password,
