@@ -61,12 +61,12 @@ export class SignUp {
 			html: '<b>Welcome to TradingBook</b>'
 		};
 
-		emailQueue.addEmailJob('sendSignupEmail', emailOptions);
+		emailQueue.addEmailJob('sendEmail', emailOptions);
 
 		const token = SignUp.prototype.signupToken(authData, userObjectId);
 		req.session = { token };
 
-		res.status(HTTP_STATUS.CREATED).json({ message: 'User created successfully', userDataWOAuth, token });
+		res.status(HTTP_STATUS.CREATED).json({ status: 'success', message: 'User created successfully', userDataWOAuth, token });
 	}
 
 	private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {

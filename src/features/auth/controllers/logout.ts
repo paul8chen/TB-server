@@ -7,6 +7,6 @@ export class Logout {
 
 		req.session.token = null;
 
-		res.status(HTTP_STATUS.ACCEPTED).json({ message: 'Logout successfully.' });
+		res.status(HTTP_STATUS.ACCEPTED).json({ status: 'success', message: 'Logout successfully.' });
 	}
 }

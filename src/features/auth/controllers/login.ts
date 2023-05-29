@@ -34,7 +34,7 @@ export class Login {
 		// 4) Send response with user data and token to client
 		const { uId, email, avatarColor, createdAt } = authData;
 		const clientData = { username, uId, email, avatarColor, createdAt };
-		res.status(HTTP_STATUS.OK).json({ message: 'Login successfully', token, user: clientData });
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Login successfully', token, user: clientData });
 	}
 
 	private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
