@@ -5,7 +5,7 @@ import { IEmailOptions } from '@service/emails/email';
 export class EmailQueue extends BaseQueue<IEmailOptions> {
 	constructor() {
 		super('email');
-		this.processJob('sendSignupEmail', 5, emailWorker.sendEmail);
+		this.processJob('sendEmail', 5, emailWorker.sendEmail);
 	}
 
 	public addEmailJob(name: string, data: IEmailOptions) {

@@ -13,8 +13,8 @@ const authSchema: Schema = new Schema(
 		user: { type: String, default: 'user' },
 		avatarColor: { type: String },
 		createdAt: { type: Date, default: Date.now },
-		passwordResetToken: { type: String, default: '' },
-		passwordResetExpires: { type: Number }
+		passwordResetToken: { type: String },
+		passwordResetExpires: { type: Date }
 	},
 	{
 		toJSON: {
