@@ -6,6 +6,7 @@ import { authmiddleware } from '@global/middlewares/auth.middleware';
 import { currentUserRoutes } from '@auth/routes/currentUserRoutes';
 import { serverAdapter } from '@service/queues/base.queue';
 import { stockRoutes } from '@stock/routes/stockRoutes';
+import { postRoutes } from '@post/routes/postRoutes';
 
 export default (app: Application): void => {
 	const routes = () => {
@@ -23,6 +24,9 @@ export default (app: Application): void => {
 
 		// Current user Route
 		app.use(`${config.BASE_PATH}/current`, authmiddleware.verifyUser, currentUserRoutes.routes());
+
+		// Post Route
+		app.use(`${config.BASE_PATH}/post`, authmiddleware.verifyUser, postRoutes.routes());
 	};
 
 	routes();

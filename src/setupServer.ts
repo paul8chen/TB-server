@@ -15,6 +15,7 @@ import { createAdapter } from '@socket.io/redis-adapter';
 import { config } from '@root/config';
 import applicationRoute from '@root/routes';
 import { IErrorResponse, CustomError } from '@global/helpers/error-handler';
+import { PostSocket } from '@socket/post.socket';
 
 const log = config.createLogger('server');
 
@@ -111,6 +112,8 @@ export class TBServer {
 	}
 
 	private socketIOConnections(io: Server): void {
-		// console.log(io);
+		const postSocket = new PostSocket(io);
+
+		postSocket.listen();
 	}
 }

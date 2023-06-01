@@ -3,10 +3,10 @@ import { createClient, RedisClientType } from 'redis';
 import Logger from 'bunyan';
 import { config } from '@root/config';
 
-type SerializedData = { [key: string]: string };
+export type SerializedData = { [key: string]: string };
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type DeserializedData = { [key: string]: any };
+export type DeserializedData = { [key: string]: any };
 
 export abstract class BaseCache<T extends Document> {
 	public client: RedisClientType;
@@ -41,7 +41,7 @@ export abstract class BaseCache<T extends Document> {
 		return serializedData;
 	}
 
-	public deserialize(data: SerializedData): any {
+	public deserialize(data: SerializedData): DeserializedData {
 		const deserializedData: DeserializedData = {};
 		for (const [key, value] of Object.entries(data)) {
 			try {
