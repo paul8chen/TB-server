@@ -42,4 +42,5 @@ authSchema.methods.hashPassword = async function (password: string): Promise<str
 };
 
 const AuthModel: Model<IAuthDocument> = model<IAuthDocument>('Auth', authSchema, 'Auth');
+
 export { AuthModel };

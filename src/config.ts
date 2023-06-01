@@ -25,6 +25,7 @@ class Config {
 	public MYSQL_USERNAME: string = process.env.MYSQL_USERNAME || '';
 	public MYSQL_DATABASENAME: string = process.env.MYSQL_DATABASENAME || '';
 	public MYSQL_PASSWORD: string = process.env.MYSQL_PASSWORD || '';
+	public BASE_PAGE_LIMIT: string = process.env.BASE_PAGE_LIMIT || '';
 
 	public validateConfig(): void {
 		for (const [key, val] of Object.entries(this)) {
