@@ -5,8 +5,6 @@ export const postSchema: ObjectSchema = Joi.object().keys({
 	bgColor: Joi.string().optional().allow(null, ''),
 	privacy: Joi.string().optional().allow(null, ''),
 	profilePicture: Joi.string().optional().allow(null, ''),
-	commentsCount: Joi.number().required(),
-	imgVersion: Joi.string().optional().allow(null, ''),
-	imgId: Joi.string().optional().allow(null, ''),
+	commentsCount: Joi.number().optional(),
 	image: Joi.string().optional().allow(null, '')
 });

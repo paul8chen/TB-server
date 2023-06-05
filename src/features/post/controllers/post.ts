@@ -22,6 +22,7 @@ export class Post {
 		const { post, bgColor, privacy, profilePicture, image } = req.body;
 		const { uId, userId, username, email, avatarColor } = req.currentUser!;
 		const reactions: IReactions = { like: 0, love: 0, happy: 0, sad: 0, wow: 0, angry: 0 };
+		console.log(reactions);
 		const postObjectId: ObjectId = new ObjectId();
 
 		const uploadResult = await uploads(image);

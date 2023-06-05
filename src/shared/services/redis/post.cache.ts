@@ -2,7 +2,7 @@ import { BaseCache } from './base.cache';
 import { ISavePostToCache, IPostDocument } from '@post/interfaces/post.interface';
 import { ServerError } from '@global/helpers/error-handler';
 import { SerializedData } from '@service/redis/base.cache';
-import type { RedisCommandRawReply } from 'node_modules/@redis/client/dist/lib/commands';
+import { RedisCommandRawReply } from 'node_modules/@redis/client/dist/lib/commands';
 
 export type PostCacheMultiType = string | number | Buffer | RedisCommandRawReply[] | SerializedData | SerializedData[];
 
