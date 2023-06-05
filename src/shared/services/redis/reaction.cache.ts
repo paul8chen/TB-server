@@ -1,6 +1,6 @@
 import { WatchError, RedisFunctions, RedisModules, RedisScripts } from 'redis';
 
-import { BaseCache, SerializedData } from '@service/redis/base.cache';
+import { BaseCache } from '@service/redis/base.cache';
 import { IReactionDocument, IReactions } from '@reaction/interfaces/reaction.interface';
 import { Helpers } from '@global/helpers/Helpers';
 import { ServerError } from '@global/helpers/error-handler';

@@ -19,4 +19,4 @@ class ReactionRoute {
 	}
 }
 
-export const reactionRoute = new ReactionRoute();
+export const reactionRoutes = new ReactionRoute();

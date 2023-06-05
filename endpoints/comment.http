@@ -1,0 +1,29 @@
+@urlPath=api/v1/comment
+
+### Get all comments
+GET {{baseUrl}}/{{urlPath}}/all-comments/647c6df9dc26ad6560886a47
+Content-Type:application/json
+withCredentials:true
+
+### Add comment
+POST {{baseUrl}}/{{urlPath}}/create-comment
+Content-Type:application/json
+withCredentials:true
+
+{
+  "postId": "647c6df9dc26ad6560886a47",
+	"comment":"test comment7"
+}
+
+### Get comment
+GET {{baseUrl}}/{{urlPath}}/647c6df9dc26ad6560886a47/647db337ff6b58ee43bca52b
+Content-Type:application/json
+withCredentials:true
+
+### Get nameLists
+GET {{baseUrl}}/{{urlPath}}/name-lists/647c6df9dc26ad6560886a47
+Content-Type:application/json
+withCredentials:true
+
+
+

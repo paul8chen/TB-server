@@ -7,7 +7,8 @@ import { currentUserRoutes } from '@auth/routes/currentUserRoutes';
 import { serverAdapter } from '@service/queues/base.queue';
 import { stockRoutes } from '@stock/routes/stockRoutes';
 import { postRoutes } from '@post/routes/postRoutes';
-import { reactionRoute } from '@reaction/routes/reactionRoutes';
+import { reactionRoutes } from '@reaction/routes/reactionRoutes';
+import { commentRoutes } from '@comment/routes/comment.routes';
 
 export default (app: Application): void => {
 	const routes = () => {
@@ -31,7 +32,9 @@ export default (app: Application): void => {
 		// Post Route
 		app.use(`${config.BASE_PATH}/post`, postRoutes.routes());
 		// Reaction Route
-		app.use(`${config.BASE_PATH}/reaction`, reactionRoute.routes());
+		app.use(`${config.BASE_PATH}/reaction`, reactionRoutes.routes());
+		// Comment Route
+		app.use(`${config.BASE_PATH}/comment`, commentRoutes.routes());
 	};
 
 	routes();

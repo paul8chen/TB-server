@@ -24,22 +24,3 @@ export function withCacheOpen<T extends Cache>(target: T): T {
 		}
 	}) as T;
 }
-
-// export class WithCacheOpen<T> {
-// 	open() {
-// 		return (target: T) =>
-// 			new Proxy(target, {
-// 				get: (obj: Cache, prop: keyof Cache) => {
-// 					try {
-// 						if (!obj.client.isOpen) {
-// 							obj.client.connect();
-// 						}
-// 						return obj[prop];
-// 					} catch (err) {
-// 						obj.log.error('Cache lost connection.');
-// 						throw new ServerError('Server error. Try again.');
-// 					}
-// 				}
-// 			});
-// 	}
-// }
