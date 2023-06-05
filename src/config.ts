@@ -26,6 +26,8 @@ class Config {
 	public MYSQL_DATABASENAME: string = process.env.MYSQL_DATABASENAME || '';
 	public MYSQL_PASSWORD: string = process.env.MYSQL_PASSWORD || '';
 	public BASE_PAGE_LIMIT: string = process.env.BASE_PAGE_LIMIT || '';
+	public REDIS_RETRY: string = process.env.REDIS_RETRY || '';
+	public REDIS_RETRY_DELAY_MS: string = process.env.REDIS_RETRY_DELAY_MS || '';
 
 	public validateConfig(): void {
 		for (const [key, val] of Object.entries(this)) {

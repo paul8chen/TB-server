@@ -2,7 +2,7 @@ import { BaseQueue } from './base.queue';
 import { postWorker } from '@worker/post.worker';
 import { IPostJob } from '@post/interfaces/post.interface';
 
-export class PothQueue extends BaseQueue<IPostJob> {
+export class PostQueue extends BaseQueue<IPostJob> {
 	constructor() {
 		super('post');
 		this.processJob('addPostToDB', 5, postWorker.addPostToDB);
@@ -15,4 +15,4 @@ export class PothQueue extends BaseQueue<IPostJob> {
 	}
 }
 
-export const postQueue = new PothQueue();
+export const postQueue = new PostQueue();

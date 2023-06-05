@@ -15,7 +15,7 @@ export interface IPostDocument extends Document {
 	imgVersion?: string;
 	imgId?: string;
 	privacy?: string;
-	reactions?: IReactions;
+	reactions: IReactions;
 	createdAt?: Date;
 }
 

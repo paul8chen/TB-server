@@ -24,4 +24,10 @@ export class Helpers {
 			return prop;
 		}
 	}
+
+	static pause(duration: number): Promise<void> {
+		return new Promise((resolve) => {
+			setTimeout(resolve, duration);
+		});
+	}
 }

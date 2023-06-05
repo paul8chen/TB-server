@@ -1,0 +1,35 @@
+@urlPath=api/v1/reaction
+
+### Get all reaction
+GET {{baseUrl}}/{{urlPath}}/get-reactions/647c6df9dc26ad6560886a47
+Content-Type:application/json
+withCredentials:true
+
+### Add reaction
+POST {{baseUrl}}/{{urlPath}}/add-reaction
+Content-Type:application/json
+withCredentials:true
+
+{
+  "postId": "647c6df9dc26ad6560886a47",
+	"type":"happy",
+  "profilePicture": "<cloudinary-user-profile-picture-url>"
+}
+
+### Update reaction
+PATCH {{baseUrl}}/{{urlPath}}/update-reaction
+Content-Type:application/json
+withCredentials:true
+
+{
+  "postId": "647c6df9dc26ad6560886a47",
+	"type":"wow"
+}
+
+### Delete reaction
+DELETE {{baseUrl}}/{{urlPath}}/delete-reaction/647c6df9dc26ad6560886a47
+Content-Type:application/json
+withCredentials:true
+
+
+

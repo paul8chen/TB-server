@@ -7,6 +7,7 @@ import { currentUserRoutes } from '@auth/routes/currentUserRoutes';
 import { serverAdapter } from '@service/queues/base.queue';
 import { stockRoutes } from '@stock/routes/stockRoutes';
 import { postRoutes } from '@post/routes/postRoutes';
+import { reactionRoute } from '@reaction/routes/reactionRoutes';
 
 export default (app: Application): void => {
 	const routes = () => {
@@ -22,11 +23,15 @@ export default (app: Application): void => {
 		app.use(`${config.BASE_PATH}/stock`, stockRoutes.tickRoute());
 		app.use(`${config.BASE_PATH}/stock`, stockRoutes.loadStockRoute());
 
-		// Current user Route
-		app.use(`${config.BASE_PATH}/current`, authmiddleware.verifyUser, currentUserRoutes.routes());
+		// Authenticated Route
+		app.use(`${config.BASE_PATH}`, authmiddleware.verifyUser);
 
+		// Current user Route
+		app.use(`${config.BASE_PATH}/current`, currentUserRoutes.routes());
 		// Post Route
-		app.use(`${config.BASE_PATH}/post`, authmiddleware.verifyUser, postRoutes.routes());
+		app.use(`${config.BASE_PATH}/post`, postRoutes.routes());
+		// Reaction Route
+		app.use(`${config.BASE_PATH}/reaction`, reactionRoute.routes());
 	};
 
 	routes();

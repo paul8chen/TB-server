@@ -4,13 +4,11 @@ import { Document } from 'mongoose';
 export interface IReactionDocument extends Document {
 	_id?: string | ObjectId;
 	username: string;
-	avataColor: string;
-	type: string;
+	avatarColor: string;
+	type: keyof IReactions;
 	postId: string;
 	profilePicture: string;
 	createdAt?: Date;
-	userTo?: string | ObjectId;
-	comment?: string;
 }
 
 export interface IReactions {
@@ -23,13 +21,8 @@ export interface IReactions {
 }
 
 export interface IReactionJob {
-	postId: string;
-	username: string;
-	previousReaction: string;
-	userTo?: string;
-	userFrom?: string;
-	type?: string;
-	reactionObject?: IReactionDocument;
+	reactionData: IReactionDocument;
+	reactions: IReactions;
 }
 
 export interface IQueryReaction {
