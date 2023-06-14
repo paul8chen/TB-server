@@ -14,6 +14,8 @@ export class CurrentUser {
 		const userData = (await userCache.getUserFromCache(userId)) || (await userService.getUserByUserId(userId));
 		if (!userData) throw new ServerError('Server internal error.');
 
-		res.status(HTTP_STATUS.OK).json({ message: 'Get current user successfully.', user: userData });
+		const { token } = req.session!;
+		console.log('successed');
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get current user successfully.', data: { user: userData, token } });
 	}
 }

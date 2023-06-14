@@ -11,8 +11,8 @@ Content-Type:application/json
 withCredentials:true
 
 {
-  "postId": "647c6df9dc26ad6560886a47",
-	"comment":"test comment7"
+  "postId": "6487fed19e3ce5c833768d14",
+	"comment":"test comment4030 ttteste dag G RRRANDOM STRING"
 }
 
 ### Get comment

@@ -9,6 +9,7 @@ import { stockRoutes } from '@stock/routes/stockRoutes';
 import { postRoutes } from '@post/routes/postRoutes';
 import { reactionRoutes } from '@reaction/routes/reactionRoutes';
 import { commentRoutes } from '@comment/routes/comment.routes';
+import { notificationRoutes } from '@notification/routes/notification.routes';
 
 export default (app: Application): void => {
 	const routes = () => {
@@ -28,13 +29,15 @@ export default (app: Application): void => {
 		app.use(`${config.BASE_PATH}`, authmiddleware.verifyUser);
 
 		// Current user Route
-		app.use(`${config.BASE_PATH}/current`, currentUserRoutes.routes());
+		app.use(`${config.BASE_PATH}/user`, currentUserRoutes.routes());
 		// Post Route
 		app.use(`${config.BASE_PATH}/post`, postRoutes.routes());
 		// Reaction Route
 		app.use(`${config.BASE_PATH}/reaction`, reactionRoutes.routes());
 		// Comment Route
 		app.use(`${config.BASE_PATH}/comment`, commentRoutes.routes());
+		// Notification Route
+		app.use(`${config.BASE_PATH}/notification`, notificationRoutes.routes());
 	};
 
 	routes();

@@ -16,6 +16,7 @@ import { config } from '@root/config';
 import applicationRoute from '@root/routes';
 import { IErrorResponse, CustomError } from '@global/helpers/error-handler';
 import { PostSocket } from '@socket/post.socket';
+import { NotificationSocket } from '@socket/notification.socket';
 
 const log = config.createLogger('server');
 
@@ -46,7 +47,7 @@ export class TBServer {
 				origin: config.CLIENT_URL,
 				credentials: true,
 				optionsSuccessStatus: 200,
-				methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+				methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
 			})
 		);
 	}
@@ -113,7 +114,9 @@ export class TBServer {
 
 	private socketIOConnections(io: Server): void {
 		const postSocket = new PostSocket(io);
+		const notificationSocket = new NotificationSocket();
 
 		postSocket.listen();
+		notificationSocket.listen(io);
 	}
 }

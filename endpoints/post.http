@@ -7,7 +7,7 @@ Content-Type:application/json
 withCredentials:true
 
 {
-  "post": "",
+  "post": "this is a post with mannnnnnnnnnnnnnnnnnnnnnnnnnnnnnny words.",
   "bgColor": "<any-hex-color-code>",
   "privacy": "Public",
   "profilePicture": "<cloudinary-user-profile-picture-url>",

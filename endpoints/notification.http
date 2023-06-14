@@ -1,0 +1,10 @@
+@urlPath=api/v1/notification
+
+### Get notification
+GET {{baseUrl}}/{{urlPath}}/get-notification
+Content-Type:application/json
+withCredentials:true
+
+
+
+
