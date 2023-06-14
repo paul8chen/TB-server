@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:5000
 
-@urlPath=api/v1/current
+@urlPath=api/v1/user
 
 ### CurrentUser
 GET {{baseUrl}}/{{urlPath}}/currentUser

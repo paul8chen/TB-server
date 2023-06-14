@@ -75,12 +75,12 @@ export class Post {
 		if (posts.length) {
 			postsCount = await postCache.getTotalPostsFromCache();
 
-			return res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all message successed.', posts, postsCount });
+			return res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all message successed.', data: { posts, postsCount } });
 		}
 
 		posts = await postService.getPosts({}, skip, limit);
 		postsCount = await postService.getPostsCount({});
-		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all message successed.', posts, postsCount });
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all message successed.', data: { posts, postsCount } });
 	}
 
 	@joiValidation(postSchema)
@@ -115,7 +115,7 @@ export class Post {
 		const jobData = { key: postId, value: updateData };
 		postQueue.addPostJob('updatePostToDB', jobData);
 
-		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Update post successfully.', udpatedPost });
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Update post successfully.', data: { udpatedPost } });
 	}
 
 	public async delete(req: Request, res: Response): Promise<void> {

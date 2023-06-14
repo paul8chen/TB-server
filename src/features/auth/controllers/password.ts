@@ -8,7 +8,6 @@ import { authService } from '@service/db/auth.service';
 import { BadRequestError } from '@global/helpers/error-handler';
 import EmailTemplate from '@service/emails/emailTemplate';
 import { config } from '@root/config';
-import { IEmailOptions } from '@service/emails/email';
 import { emailQueue } from '@service/queues/email.queue';
 
 export class Password {

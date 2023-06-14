@@ -9,6 +9,8 @@ import { withCacheOpen } from '@global/helpers/cacheOpen';
 import { BadRequestError, ServerError } from '@global/helpers/error-handler';
 import { reactionQueue } from '@service/queues/reaction.queue';
 import { reactionService } from '@service/db/reaction.service';
+import { INotificationJobData } from '@notification/interfaces/notification.interface';
+import { notificationQueue } from '@service/queues/notification.queue';
 
 const reactionCache = withCacheOpen<ReactionCache>(new ReactionCache());
 
@@ -36,6 +38,17 @@ export class Reaction {
 		const reactions = await reactionCache.addReactionToCache(reactionData);
 
 		reactionQueue.addReactionJob('addReactionToDB', { reactionData, reactions });
+
+		const notificationJobData: INotificationJobData = {
+			username,
+			comment: '',
+			postId,
+			notificationType: 'reaction',
+			reaction: type,
+			message: `${username} sent ${type} to your post.`
+		};
+
+		notificationQueue.addNotificationJob('addNotificationToDB', { notificationJobData });
 
 		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Add reactions successfully', reactions });
 	}

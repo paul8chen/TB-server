@@ -11,6 +11,8 @@ import { CommentCache } from '@service/redis/comment.cache';
 import { commentService } from '@service/db/comment.service';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { commentQueue } from '@service/queues/comment.queue';
+import { notificationQueue } from '@service/queues/notification.queue';
+import { INotificationJobData } from '@notification/interfaces/notification.interface';
 
 const commentCache = withCacheOpen(new CommentCache());
 
@@ -21,12 +23,22 @@ export class Comment {
 		const postId: string = req.body.postId;
 		const comment: string = req.body.comment;
 		const { username } = req.currentUser!;
-
+		console.log('comment', comment);
 		const commentData: ICommentDocument = { _id: commentId, postId, username, comment } as ICommentDocument;
 
 		await commentCache.saveCommentToCache(commentData);
 
 		commentQueue.addCommentJob('addCommentToDB', { commentData });
+
+		const notificationJobData: INotificationJobData = {
+			username,
+			comment,
+			postId,
+			notificationType: 'comment',
+			reaction: '',
+			message: `${username} reply to your post: ${comment}`
+		};
+		notificationQueue.addNotificationJob('addNotificationToDB', { notificationJobData });
 
 		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Save comment successed.' });
 	}
