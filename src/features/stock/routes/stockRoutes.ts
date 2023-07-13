@@ -5,6 +5,7 @@ import { StockLoader } from '@stock/controllers/load-stock';
 import { authmiddleware } from '@global/middlewares/auth.middleware';
 import { PriceController } from '@stock/controllers/price';
 import { MaAdder } from '@stock/controllers/add-ma';
+import { CandlestickController } from '@stock/controllers/candlestick';
 import { TickController } from '@stock/controllers/tick';
 
 class StockRoutes {
@@ -33,8 +34,13 @@ class StockRoutes {
 	public indicatorRoute(): Router {
 		this.router.post('/add-price', authmiddleware.verifyUser, PriceController.prototype.create);
 		this.router.patch('/update-price', authmiddleware.verifyUser, PriceController.prototype.update);
-		this.router.post('/delete-price', authmiddleware.verifyUser, PriceController.prototype.delete);
+		this.router.delete('/delete-price', authmiddleware.verifyUser, PriceController.prototype.delete);
 		this.router.post('/add-ma', authmiddleware.verifyUser, MaAdder.prototype.create);
+		this.router.patch('/update-ma', authmiddleware.verifyUser, MaAdder.prototype.update);
+		this.router.delete('/delete-ma', authmiddleware.verifyUser, MaAdder.prototype.delete);
+		this.router.post('/add-candlestick', authmiddleware.verifyUser, CandlestickController.prototype.create);
+		this.router.patch('/update-candlestick', authmiddleware.verifyUser, CandlestickController.prototype.update);
+		this.router.delete('/delete-candlestick', authmiddleware.verifyUser, CandlestickController.prototype.delete);
 		return this.router;
 	}
 

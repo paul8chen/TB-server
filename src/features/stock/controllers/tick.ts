@@ -8,6 +8,7 @@ import { Tick } from '@stock/models/tick.schema';
 import { createTickSchema, readTickSchema } from '@stock/schemes/tick.scheme';
 import { priceService } from '@service/mysql/price.service';
 import { maService } from '@service/mysql/ma.service';
+import { candlestickService } from '@service/mysql/candlestick.service';
 
 export class TickController {
 	@joiValidation(createTickSchema)
@@ -35,9 +36,10 @@ export class TickController {
 		console.log('tickId: ', tickId);
 		const getPriceDataQuery = priceService.getPriceByTickId(tickId);
 		const getMaDataQuery = maService.getMaByTickId(tickId);
+		const getcandlestickDataQuery = candlestickService.getCandlestickByTickId(tickId);
 
-		const [priceData, maData] = await Promise.all([getPriceDataQuery, getMaDataQuery]);
-		const indicatorData = [...priceData, ...maData];
+		const [priceData, maData, candlestickData] = await Promise.all([getPriceDataQuery, getMaDataQuery, getcandlestickDataQuery]);
+		const indicatorData = [...priceData, ...maData, ...candlestickData];
 
 		res.status(HTTP_STATUS.OK).json({ message: 'Get tick successfully.', data: { indicatorData } });
 	}

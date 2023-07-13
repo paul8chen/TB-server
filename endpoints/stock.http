@@ -44,12 +44,12 @@ Content-Type:application/json
 withCredentials:true
 
 {
-	"price":100,
+	"price":28000,
 	"indicatorType":"price",
 	"color":"#50b5ff",
 	"breakRatio":0.75,
 	"isAbove":false,
-	"date":1681210550514,
+	"date":1681430400000,
 	"TickId":"{{tickId}}"
 }
 
@@ -59,19 +59,21 @@ Content-Type:application/json
 withCredentials:true
 
 {
-	"price":100,
-	"newPrice":500,
-	"TickId":"{{tickId}}"
-}
+	"id":"939679ca-c835-46ba-a516-220012532b2c",
+	"price":27000,
+	"color":"#50b5ff",
+	"breakRatio":0.75,
+	"isAbove":false,
+	"date":1681430400000
+	}
 
 ### delete price on the speific Tickid
-POST {{baseUrl}}/{{urlPath}}/delete-price
+DELETE {{baseUrl}}/{{urlPath}}/delete-price
 Content-Type:application/json
 withCredentials:true
 
 {
-	"price":500,
-	"TickId":"{{tickId}}"
+	"id":"939679ca-c835-46ba-a516-220012532b2c"
 }
 
 ### add ma on the speific tick

@@ -106,9 +106,6 @@ class StockService extends BaseService<typeof Stock> {
 		bodyRatio: string,
 		candlestickType: string | undefined
 	): Promise<Stock[]> {
-		console.log('====================');
-		console.log('BY RATIO');
-		console.log('====================');
 		const approxmateRange = upperShadowRatio ? 0.1 : 0.05;
 
 		const upperShadowQuery = upperShadowRatio
@@ -129,9 +126,6 @@ class StockService extends BaseService<typeof Stock> {
 	}
 
 	public async getStockDataByCandlestickRatioDoji(date: string, upperShadowRatio: string): Promise<Stock[]> {
-		console.log('====================');
-		console.log('BY RATIO DOJI');
-		console.log('====================');
 		const rawQuery = `SELECT  date, close FROM
 		(SELECT date, close, (upper_deltaP/deltaP) AS upper_ratio FROM
 		(SELECT date, close, (high-low) AS deltaP, (high-highP) AS upper_deltaP FROM btcusdt WHERE date > "${date}" AND close = open) AS INNERQUERY) AS INNERQUERY
@@ -143,9 +137,6 @@ class StockService extends BaseService<typeof Stock> {
 	}
 
 	public async getStockDataByCandlestickType(date: string, candlestickType: string): Promise<Stock[]> {
-		console.log('====================');
-		console.log('BY CANDLESTICK TYPE');
-		console.log('====================');
 		const compareSymbol = candlestickType !== 'doji' ? (candlestickType === 'bullish' ? '>' : '<') : '=';
 
 		const rawQuery = `SELECT date, close FROM btcusdt WHERE date > "${date}" AND close ${compareSymbol} open`;

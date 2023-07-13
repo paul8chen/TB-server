@@ -31,4 +31,41 @@ const createPriceSchema: ObjectSchema = Joi.object().keys({
 	})
 });
 
-export { createPriceSchema };
+const updatePriceSchema: ObjectSchema = Joi.object().keys({
+	id: Joi.string().required().messages({
+		'string.base': 'Id must be of type string',
+		'string.empty': 'Id is a required field'
+	}),
+	price: Joi.number().required().positive().messages({
+		'number.base': 'Price must be of type number',
+		'number.empty': 'Price is a required field',
+		'number.positive': 'Price must be a positive number'
+	}),
+	date: Joi.date().messages({
+		'date.base': 'Invalid date'
+	}),
+	color: Joi.string().required().messages({
+		'string.base': 'Color must be of type string',
+		'string.empty': 'Color is a required field'
+	}),
+	breakRatio: Joi.number().required().messages({
+		'number.base': 'BreakRatio must be of type number',
+		'number.empty': 'BreakRatio is a required field'
+	}),
+	isAbove: Joi.boolean().required().messages({
+		'boolean.base': 'IsAbove must be of type boolean'
+	})
+});
+
+const deleteByIdSchema: ObjectSchema = Joi.object().keys({
+	id: Joi.string().required().messages({
+		'string.base': 'Id must be of type string',
+		'string.empty': 'Id is a required field'
+	}),
+	tickId: Joi.string().required().messages({
+		'string.base': 'TickId must be of type string',
+		'string.empty': 'TickId is a required field'
+	})
+});
+
+export { createPriceSchema, updatePriceSchema, deleteByIdSchema };

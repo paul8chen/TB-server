@@ -5,7 +5,8 @@ import HTTP_STATUS from 'http-status-codes';
 import { Price } from '@stock/models/price.schema';
 import { priceService } from '@service/mysql/price.service';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
-import { createPriceSchema } from '@stock/schemes/add-price';
+import { createPriceSchema, updatePriceSchema, deleteByIdSchema } from '@stock/schemes/add-price';
+import { IUpdatePriceDocument } from '@stock/interfaces/stock.interface';
 
 export class PriceController {
 	@joiValidation(createPriceSchema)
@@ -13,26 +14,28 @@ export class PriceController {
 		const { price, date, breakRatio, color, isAbove, TickId, indicatorType } = req.body;
 
 		const data: InferAttributes<Price> = { price: +price, TickId, date, breakRatio, color, isAbove, indicatorType };
-		console.log('data: ', data);
+
 		await priceService.createPrice(data);
 
 		res.status(HTTP_STATUS.OK).json({ message: 'Add price successfully.' });
 	}
 
+	@joiValidation(updatePriceSchema)
 	public async update(req: Request, res: Response): Promise<void | Response> {
-		const { price, newPrice, TickId } = req.body;
+		const { id, price, date, breakRatio, color, isAbove } = req.body;
 
-		const data = { price: +price, newPrice: +newPrice, TickId };
-		await priceService.updatePriceById(data);
+		const data: IUpdatePriceDocument = { price: +price, date, breakRatio, color, isAbove };
 
-		res.status(HTTP_STATUS.OK).json({ message: 'Update price successfully.' });
+		await priceService.updatePriceById(id, data);
+
+		res.status(HTTP_STATUS.OK).json({ message: 'Add price successfully.' });
 	}
 
+	@joiValidation(deleteByIdSchema)
 	public async delete(req: Request, res: Response): Promise<void | Response> {
-		// const { price, TickId } = req.body;
+		const { id, tickId } = req.body;
 
-		// const data = { price: +price, TickId };
-		// await priceService.deletePriceByPriceAndTickId(data);
+		await priceService.deletePriceById(id, tickId);
 
 		res.status(HTTP_STATUS.OK).json({ message: 'Delete price successfully.' });
 	}

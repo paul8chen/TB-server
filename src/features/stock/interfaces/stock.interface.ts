@@ -1,9 +1,3 @@
-export interface IUpdatePrice {
-	TickId: string;
-	price: number;
-	newPrice: number;
-}
-
 export interface IStockDocument {
 	date: Date;
 	open: number;
@@ -27,4 +21,27 @@ export interface IMaData {
 export interface IChartData {
 	x: number;
 	y: number | undefined;
+}
+
+export interface IUpdatePriceDocument {
+	price: number;
+	date: string;
+	breakRatio: number;
+	color: string;
+	isAbove: boolean;
+}
+
+export interface IUpdateMaDocument {
+	ma: number;
+	maBy: string;
+	breakRatio: number;
+	color: string;
+	isAbove: boolean;
+}
+
+export interface IUpdateCandlestickDocument {
+	bodyRatio: number;
+	upperShadow: number;
+	lowerShadow: number;
+	candlestickType: string;
 }

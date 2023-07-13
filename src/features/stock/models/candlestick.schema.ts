@@ -4,18 +4,17 @@ import { mysqlConnection } from '@service/mysql/mysql.connection';
 import { Tick } from '@stock/models/tick.schema';
 const { sequelize } = mysqlConnection;
 
-export class Price extends Model<InferAttributes<Price>, InferCreationAttributes<Price>> {
+export class Candlestick extends Model<InferAttributes<Candlestick>, InferCreationAttributes<Candlestick>> {
 	declare id?: CreationOptional<number>;
 	declare indicatorType: string;
-	declare price: number;
-	declare date: string;
-	declare color: string;
-	declare breakRatio: number;
-	declare isAbove: boolean;
+	declare bodyRatio: number;
+	declare upperShadow: number;
+	declare lowerShadow: number;
+	declare candlestickType: string;
 	declare TickId: ForeignKey<Tick['id']>;
 }
 
-Price.init(
+Candlestick.init(
 	{
 		id: {
 			type: DataTypes.UUID,
@@ -26,33 +25,25 @@ Price.init(
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-		price: {
-			type: DataTypes.DOUBLE.UNSIGNED,
-			allowNull: false
-		},
-		date: {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
-		color: {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
-		breakRatio: {
+		bodyRatio: {
 			type: DataTypes.FLOAT,
 			allowNull: false
 		},
-		isAbove: {
-			type: DataTypes.BOOLEAN,
+		upperShadow: {
+			type: DataTypes.FLOAT,
+			allowNull: false
+		},
+		lowerShadow: {
+			type: DataTypes.FLOAT,
+			allowNull: false
+		},
+		candlestickType: {
+			type: DataTypes.STRING,
 			allowNull: false
 		}
-		// TickId: {
-		// 	type: DataTypes.STRING,
-		// 	allowNull: false
-		// }
 	},
-	{ tableName: 'price', sequelize }
+	{ tableName: 'candlestick', sequelize }
 );
 
-Tick.hasMany(Price, { onDelete: 'CASCADE' });
-Price.belongsTo(Tick);
+Tick.hasMany(Candlestick, { onDelete: 'CASCADE' });
+Candlestick.belongsTo(Tick);

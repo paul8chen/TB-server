@@ -1,9 +1,9 @@
-import { InferAttributes, Op } from 'sequelize';
+import { InferAttributes } from 'sequelize';
 
 import { BaseService } from './base.service';
 import { Tick } from '@stock/models/tick.schema';
 import { Price } from '@stock/models/price.schema';
-import { IUpdatePrice } from '@stock/interfaces/stock.interface';
+import { IUpdatePriceDocument } from '@stock/interfaces/stock.interface';
 
 class PriceService extends BaseService<typeof Price> {
 	service = Price;
@@ -16,31 +16,20 @@ class PriceService extends BaseService<typeof Price> {
 	}
 
 	public async getPriceByTickId(TickId: string): Promise<InferAttributes<Price>[]> {
-		return Price.findAll({ attributes: ['id', 'price', 'date', 'color', 'breakRatio', 'isAbove'], where: { TickId } });
+		return Price.findAll({
+			attributes: ['id', 'price', 'date', 'color', 'breakRatio', 'isAbove', 'indicatorType', 'createdAt'],
+			where: { TickId }
+		});
 	}
 
-	public async updatePriceById(data: IUpdatePrice): Promise<void> {
-		const { newPrice, price, TickId } = data;
-		await Price.update(
-			{ price: newPrice },
-			{
-				where: {
-					[Op.and]: [
-						{
-							TickId
-						},
-						{
-							price
-						}
-					]
-				}
-			}
-		);
+	public async updatePriceById(id: string, data: IUpdatePriceDocument): Promise<void> {
+		await Price.update(data, {
+			where: { id }
+		});
 	}
 
-	public async deletePriceByPriceAndTickId(data: InferAttributes<Price>): Promise<void> {
-		const { price, TickId } = data;
-		await Price.destroy({ where: { [Op.and]: [{ TickId }, { price }] } });
+	public async deletePriceById(id: string, tickId: string): Promise<void> {
+		await Promise.all([Price.destroy({ where: { id } }), Tick.increment({ totalIndicator: 1 }, { where: { id: tickId } })]);
 	}
 }
 

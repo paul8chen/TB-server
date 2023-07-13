@@ -8,6 +8,7 @@ import { priceService } from '@service/mysql/price.service';
 import { maService } from '@service/mysql/ma.service';
 import { tickService } from '@service/mysql/tick.service';
 import { tickCartService } from '@service/mysql/tickCart.service';
+import { candlestickService } from '@service/mysql/candlestick.service';
 
 const log = config.createLogger('database');
 
@@ -29,8 +30,8 @@ export default async () => {
 
 		// await mysqlConnection.sequelize.sync({ force: true });
 		// await tickCartService.syncTable();
-		await tickService.syncTable();
-		await Promise.all([stockService.syncTable(), priceService.syncTable(), maService.syncTable()]);
+		// await tickService.syncTable();
+		// await Promise.all([stockService.syncTable(), priceService.syncTable(), maService.syncTable(), candlestickService.syncTable()]);
 	};
 
 	await connect();
