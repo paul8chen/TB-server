@@ -29,8 +29,8 @@ export default async () => {
 
 		// await mysqlConnection.sequelize.sync({ force: true });
 		// await tickCartService.syncTable();
-		// await tickService.syncTable();
-		// await Promise.all([stockService.syncTable(), priceService.syncTable(), maService.syncTable()]);
+		await tickService.syncTable();
+		await Promise.all([stockService.syncTable(), priceService.syncTable(), maService.syncTable()]);
 	};
 
 	await connect();
