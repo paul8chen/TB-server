@@ -5,7 +5,6 @@ import { StockLoader } from '@stock/controllers/load-stock';
 import { authmiddleware } from '@global/middlewares/auth.middleware';
 import { PriceController } from '@stock/controllers/price';
 import { MaAdder } from '@stock/controllers/add-ma';
-import { TickCartController } from '@stock/controllers/tickCart';
 import { TickController } from '@stock/controllers/tick';
 
 class StockRoutes {
@@ -24,6 +23,9 @@ class StockRoutes {
 	public routes(): Router {
 		this.router.get('/get-stock', StockFetcher.prototype.read);
 		this.router.get('/get-stock/:selectedMonth', StockFetcher.prototype.readByMonth);
+		this.router.get('/get-price', StockFetcher.prototype.readPriceFiltered);
+		this.router.get('/get-MA', StockFetcher.prototype.readMa);
+		this.router.get('/get-candlestick', StockFetcher.prototype.readByCandleStick);
 
 		return this.router;
 	}
@@ -37,9 +39,9 @@ class StockRoutes {
 	}
 
 	public tickRoute(): Router {
-		this.router.post('/add-tickCart', authmiddleware.verifyUser, TickCartController.prototype.create);
-		this.router.post('/delete-tickCart', authmiddleware.verifyUser, TickCartController.prototype.delete);
 		this.router.post('/add-tick', authmiddleware.verifyUser, TickController.prototype.create);
+		this.router.post('/get-tick', authmiddleware.verifyUser, TickController.prototype.read);
+		this.router.get('/get-tick-indicator/:tickId', authmiddleware.verifyUser, TickController.prototype.readIndicator);
 		this.router.post('/delete-tick', authmiddleware.verifyUser, TickController.prototype.delete);
 		return this.router;
 	}

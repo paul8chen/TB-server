@@ -3,10 +3,11 @@ import { ObjectId } from 'mongodb';
 import { Request, Response } from 'express';
 import { omit } from 'lodash';
 import jwt from 'jsonwebtoken';
+import { InferAttributes } from 'sequelize';
 
 import { BadRequestError } from '@global/helpers/error-handler';
 import { IAuthDocument, ISignUpData } from '@auth/interfaces/auth.interface';
-import { IUserDocument, INotificationSettings, ISocialLinks } from '@user/interfaces/user.interface';
+import { IUserDocument } from '@user/interfaces/user.interface';
 import { authService } from '@service/db/auth.service';
 import { Helpers } from '@global/helpers/Helpers';
 import { uploads } from '@global/helpers/cloudinary-upload';
@@ -17,13 +18,14 @@ import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
 import { config } from '@root/config';
 import { emailQueue } from '@service/queues/email.queue';
+import { Tick } from '@stock/models/tick.schema';
 
 const userCache = new UserCache();
 
 export class SignUp {
 	@joiValidation(signupSchema)
 	public async create(req: Request, res: Response): Promise<void> {
-		const { username, email, password, avatarColor, avatarImage } = req.body;
+		const { username, email, password, avatarImage } = req.body;
 		let { user } = req.body;
 		user ??= 'user';
 
@@ -35,7 +37,7 @@ export class SignUp {
 		const userObjectId = new ObjectId();
 		const uId = '' + Helpers.generateRandomInt(12);
 
-		const authData = SignUp.prototype.signupDataToAuthData({ _id: authObjectId, uId, username, email, password, avatarColor, user });
+		const authData = SignUp.prototype.signupDataToAuthData({ _id: authObjectId, uId, username, email, password, user });
 
 		// Upload user profile image to cloudinary
 		const uploadResult = await uploads(avatarImage, '' + userObjectId, true, true);
@@ -47,10 +49,16 @@ export class SignUp {
 		await userCache.saveUserToCache('' + userObjectId, uId, userData);
 
 		// Add authData to DB
-		const userDataWOAuth: IUserDocument = omit(userData, ['username', 'email', 'password', 'avatarColor', 'uId']);
+		const userDataWOAuth: IUserDocument = omit(userData, ['username', 'email', 'password', 'uId']);
+		const defaultTick: InferAttributes<Tick> = {
+			tickName: 'default',
+			totalIndicator: 0,
+			uId
+		};
 
 		authQueue.addAuthJob('addAuthToDB', { value: authData });
 		userQueue.addUserJob('addUserToDB', { value: userDataWOAuth });
+		userQueue.addUserJob('addDefaultTickToDB', { defaultTick });
 
 		// Send signup eamil to user
 		const emailOptions = {
@@ -72,7 +80,7 @@ export class SignUp {
 	}
 
 	private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
-		const { uId, email, username, avatarColor, user } = data;
+		const { uId, email, username, user } = data;
 
 		const token = jwt.sign(
 			{
@@ -80,8 +88,7 @@ export class SignUp {
 				user,
 				uId,
 				email,
-				username,
-				avatarColor
+				username
 			},
 			config.JWT_TOKEN
 		);
@@ -90,14 +97,13 @@ export class SignUp {
 	}
 
 	private signupDataToAuthData(data: ISignUpData): IAuthDocument {
-		const { _id, uId, username, email, password, avatarColor, user } = data;
+		const { _id, uId, username, email, password, user } = data;
 
 		const authData = {
 			user,
 			_id,
 			uId,
 			password,
-			avatarColor,
 			username: Helpers.firstLetterUppercase(username),
 			email: email.toLowerCase(),
 			createdAt: new Date()
@@ -107,20 +113,7 @@ export class SignUp {
 	}
 
 	private authDataToUserData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
-		const { _id, username, email, uId, password, avatarColor } = data;
-		const notifications: INotificationSettings = {
-			messages: true,
-			reactions: true,
-			comments: true,
-			follows: true
-		};
-
-		const social: ISocialLinks = {
-			facebook: '',
-			instagram: '',
-			twitter: '',
-			youtube: ''
-		};
+		const { _id, username, email, uId, password } = data;
 
 		const userData = {
 			_id: userObjectId,
@@ -129,21 +122,8 @@ export class SignUp {
 			username: Helpers.firstLetterUppercase(username),
 			email,
 			password,
-			avatarColor,
 			profilePicture: '',
-			blocked: [],
-			blockedBy: [],
-			work: '',
-			location: '',
-			school: '',
-			quote: '',
-			bgImageVersion: '',
-			bgImageId: '',
-			followersCount: 0,
-			followingCount: 0,
-			postsCount: 0,
-			notifications,
-			social
+			postsCount: 0
 		} as unknown as IUserDocument;
 
 		return userData;

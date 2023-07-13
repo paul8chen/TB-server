@@ -4,7 +4,6 @@ import { Document } from 'mongoose';
 export interface IReactionDocument extends Document {
 	_id?: string | ObjectId;
 	username: string;
-	avatarColor: string;
 	type: keyof IReactions;
 	postId: string;
 	profilePicture: string;
@@ -12,12 +11,9 @@ export interface IReactionDocument extends Document {
 }
 
 export interface IReactions {
-	like: number;
-	love: number;
-	happy: number;
-	wow: number;
-	sad: number;
-	angry: number;
+	rocket: number;
+	bullish: number;
+	bearish: number;
 }
 
 export interface IReactionJob {

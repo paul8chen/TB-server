@@ -3,7 +3,8 @@
 @urlPath=api/v1/stock
 
 @tickCartId = {{addTickCart.response.body.data.id}}
-@tickId ={{addTick.response.body.data.id}}
+@tickId ={{addTick.response.body.data.tickData[0].id}}
+
 ### Load Historical Data
 GET {{baseUrl}}/{{urlPath}}/load-stock
 Content-Type:application/json
@@ -15,7 +16,25 @@ Content-Type:application/json
 withCredentials:true
 
 ### Get Last N Month Data
-GET {{baseUrl}}/{{urlPath}}/get-stock/3
+GET {{baseUrl}}/{{urlPath}}/get-stock/2
+Content-Type:application/json
+withCredentials:true
+
+### Get filtered Data by price
+GET {{baseUrl}}/{{urlPath}}/get-price?price=27200.24&date=2023-04-14T00:00:00.000Z&breakRatio=0.5&isAbove=false
+Content-Type:application/json
+withCredentials:true
+
+### Get MA
+GET {{baseUrl}}/{{urlPath}}/get-MA?selectedMonth=3&ma=30&candleRatio=0.25
+
+Content-Type:application/json
+withCredentials:true
+
+### Get Candle direction
+GET {{baseUrl}}/{{urlPath}}/get-candlestick?selectedMonth=3&upperShadowRatio=0.8&bodyRatio=&candlestickType=doji
+
+
 Content-Type:application/json
 withCredentials:true
 
@@ -26,6 +45,11 @@ withCredentials:true
 
 {
 	"price":100,
+	"indicatorType":"price",
+	"color":"#50b5ff",
+	"breakRatio":0.75,
+	"isAbove":false,
+	"date":1681210550514,
 	"TickId":"{{tickId}}"
 }
 
@@ -56,9 +80,26 @@ Content-Type:application/json
 withCredentials:true
 
 {
-	"param":20,
+	"ma":30,
+	"indicatorType":"ma",
+	"color":"#50b5ff",
+	"breakRatio":0.75,
+	"isAbove":false,
+	"maBy":"close",
 	"TickId":"{{tickId}}"
 }
+
+
+### get tick with user uid
+# @name addTick
+POST {{baseUrl}}/{{urlPath}}/get-tick
+Content-Type:application/json
+withCredentials:true
+
+{
+	"uId":"120212357708"
+}
+
 
 ###add tick on the speific tickCart
 # @name addTick

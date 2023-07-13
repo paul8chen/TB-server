@@ -24,13 +24,19 @@ export class StockLoader {
 					})
 				)
 				.on('data', async (data) => {
+					const { Open, Close, Low, High, Date: date, Volume } = data;
+					const highP = +Close >= +Open ? +Close : +Open;
+					const lowP = +Close >= +Open ? +Open : +Close;
+
 					const storedData: InferAttributes<Stock> = {
-						date: new Date(data.Date),
-						open: +data.Open,
-						close: +data.Close,
-						low: +data.Low,
-						high: +data.High,
-						volume: +data.Volume
+						date: new Date(date),
+						open: +Open,
+						close: +Close,
+						low: +Low,
+						high: +High,
+						highP,
+						lowP,
+						volume: +Volume
 					};
 
 					await stockService.createHistoricalData(storedData);

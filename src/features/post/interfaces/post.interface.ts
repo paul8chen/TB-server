@@ -7,14 +7,11 @@ export interface IPostDocument extends Document {
 	userId: string;
 	username: string;
 	email: string;
-	avatarColor: string;
 	profilePicture: string;
 	post: string;
-	bgColor: string;
 	commentsCount: number;
 	imgVersion?: string;
 	imgId?: string;
-	privacy?: string;
 	reactions: IReactions;
 	createdAt?: Date;
 }

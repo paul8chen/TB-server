@@ -10,18 +10,19 @@ export class CommentCache extends BaseCache<ICommentDocument> {
 		const { postId } = commentData;
 		const serializedCommentData = JSON.stringify(commentData);
 
-		const multi = await this.client.multi();
+		const multi = this.client.multi();
 
-		multi.lPush(`comments:${postId}`, serializedCommentData);
+		multi.rPush(`comments:${postId}`, serializedCommentData);
 		multi.hIncrBy(`posts:${postId}`, 'commentsCount', 1);
 
 		await multi.exec();
 	}
 
-	public async getAllCommentFromCache(postId: string): Promise<ICommentDocument[]> {
+	public async getAllCommentFromCache(postId: string, start: number, end: number): Promise<ICommentDocument[]> {
 		const commentDatas: ICommentDocument[] = [];
 
-		const serializedCommentDatas = await this.client.lRange(`comments:${postId}`, 0, -1);
+		const serializedCommentDatas = await this.client.lRange(`comments:${postId}`, start, end);
+
 		serializedCommentDatas.forEach((serializedCommentData: string) => {
 			const commentData: ICommentDocument = JSON.parse(serializedCommentData);
 
@@ -50,10 +51,46 @@ export class CommentCache extends BaseCache<ICommentDocument> {
 	}
 
 	public async getCommentByIdFromCache(postId: string, commentId: string): Promise<ICommentDocument | undefined> {
-		const commentDatas = await this.getAllCommentFromCache(postId);
+		const commentDatas = await this.getAllCommentFromCache(postId, 0, -1);
 
 		const commentData = commentDatas.find((data) => data._id === commentId);
 
 		return commentData;
+	}
+
+	public async getTotalPostCommentsFromCache(postId: string): Promise<number> {
+		return await this.client.lLen(`comments:${postId}`);
+	}
+
+	public async updatePostCommentFromCache(commentData: ICommentDocument): Promise<void | string> {
+		const { postId, _id } = commentData;
+
+		const serializedCommentDatas = await this.client.lRange(`comments:${postId}`, 0, -1);
+
+		let updatedCommentDataIndex: number;
+		let isUpdatedDataExist = false;
+		serializedCommentDatas.forEach((serializedCommentData, index) => {
+			const commentData = JSON.parse(serializedCommentData);
+
+			if (commentData._id !== _id) return;
+
+			updatedCommentDataIndex = index;
+			isUpdatedDataExist = true;
+		});
+
+		if (!isUpdatedDataExist) return;
+
+		return await this.client.lSet(`comments:${postId}`, updatedCommentDataIndex!, JSON.stringify(commentData));
+	}
+
+	public async deleteCommentFromCache(commentData: ICommentDocument): Promise<void> {
+		const { postId } = commentData;
+
+		const multi = this.client.multi();
+
+		multi.lRem(`comments:${postId}`, -1, JSON.stringify(commentData));
+		multi.hIncrBy(`posts:${postId}`, 'commentsCount', -1);
+
+		await multi.exec();
 	}
 }

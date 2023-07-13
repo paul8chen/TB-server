@@ -10,6 +10,10 @@ export class Stock extends Model<InferAttributes<Stock>, InferCreationAttributes
 	declare close: number;
 	declare high: number;
 	declare low: number;
+	declare highP: number;
+	declare lowP: number;
+	// declare highQP: number;
+	// declare lowQP: number;
 	declare volume: number;
 }
 
@@ -22,21 +26,37 @@ Stock.init(
 		},
 
 		open: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.DOUBLE.UNSIGNED,
 			allowNull: false
 		},
 		close: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.DOUBLE.UNSIGNED,
 			allowNull: false
 		},
 		high: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.DOUBLE.UNSIGNED,
 			allowNull: false
 		},
 		low: {
-			type: DataTypes.INTEGER.UNSIGNED,
+			type: DataTypes.DOUBLE.UNSIGNED,
 			allowNull: false
 		},
+		highP: {
+			type: DataTypes.DOUBLE.UNSIGNED,
+			allowNull: false
+		},
+		lowP: {
+			type: DataTypes.DOUBLE.UNSIGNED,
+			allowNull: false
+		},
+		// highQP: {
+		// 	type: DataTypes.FLOAT,
+		// 	allowNull: false
+		// },
+		// lowQP: {
+		// 	type: DataTypes.FLOAT,
+		// 	allowNull: false
+		// },
 		volume: {
 			type: DataTypes.INTEGER.UNSIGNED,
 			allowNull: false

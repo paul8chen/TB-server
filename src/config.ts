@@ -28,6 +28,8 @@ class Config {
 	public BASE_PAGE_LIMIT: string = process.env.BASE_PAGE_LIMIT || '';
 	public REDIS_RETRY: string = process.env.REDIS_RETRY || '';
 	public REDIS_RETRY_DELAY_MS: string = process.env.REDIS_RETRY_DELAY_MS || '';
+	public STOCK_CANDLE_RATIO: string = process.env.STOCK_CANDLE_RATIO || '';
+	public STOCK_CACULATE_MA_BY: string = process.env.STOCK_CACULATE_MA_BY || '';
 
 	public validateConfig(): void {
 		for (const [key, val] of Object.entries(this)) {

@@ -5,6 +5,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import { postSchema } from '@post/schemes/post.schemes';
 import { config } from '@root/config';
+import { withCacheOpen } from '@global/helpers/cacheOpen';
 import { IPostDocument } from '@post/interfaces/post.interface';
 import { IReactions } from '@reaction/interfaces/reaction.interface';
 import { uploads } from '@global/helpers/cloudinary-upload';
@@ -14,15 +15,15 @@ import { postSocketIO } from '@root/shared/sockets/post.socket';
 import { postQueue } from '@service/queues/post.queue';
 import { postService } from '@service/db/post.service';
 
-const postCache = new PostCache();
+const postCache = withCacheOpen(new PostCache());
 
 export class Post {
 	@joiValidation(postSchema)
 	public async create(req: Request, res: Response): Promise<void> {
-		const { post, bgColor, privacy, profilePicture, image } = req.body;
-		const { uId, userId, username, email, avatarColor } = req.currentUser!;
-		const reactions: IReactions = { like: 0, love: 0, happy: 0, sad: 0, wow: 0, angry: 0 };
-		console.log(reactions);
+		const { post, profilePicture, image } = req.body;
+		const { uId, userId, username, email } = req.currentUser!;
+		const reactions: IReactions = { rocket: 0, bullish: 0, bearish: 0 };
+
 		const postObjectId: ObjectId = new ObjectId();
 
 		const uploadResult = await uploads(image);
@@ -35,14 +36,11 @@ export class Post {
 			userId,
 			username,
 			email,
-			avatarColor,
 			profilePicture,
 			post,
-			bgColor,
 			commentsCount: 0,
 			imgVersion: imgVersion || '',
 			imgId: imgId || '',
-			privacy,
 			createdAt: new Date(),
 			reactions
 		} as IPostDocument;
@@ -51,7 +49,7 @@ export class Post {
 
 		await postCache.savePostToCache(cacheData);
 
-		postSocketIO.emit('add post', createdPost);
+		postSocketIO.emit('addPost', createdPost);
 
 		const jobData = { key: userId, value: createdPost };
 		postQueue.addPostJob('addPostToDB', jobData);
@@ -64,41 +62,36 @@ export class Post {
 		const postPerPage = +config.BASE_PAGE_LIMIT;
 		const skip = (page - 1) * postPerPage;
 		const limit = page * postPerPage;
-		const cacheStart = skip === 0 ? skip : skip + 1;
-		const cacheEnd = skip === 0 ? limit - 1 : limit;
 
 		let posts: IPostDocument[];
 		let postsCount: number;
 
-		posts = await postCache.getPostFromCache(cacheStart, cacheEnd);
+		posts = await postCache.getPostFromCache(skip, limit - 1);
 
 		if (posts.length) {
 			postsCount = await postCache.getTotalPostsFromCache();
 
-			return res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all message successed.', data: { posts, postsCount } });
+			return res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all posts successed.', data: { posts, postsCount } });
 		}
 
 		posts = await postService.getPosts({}, skip, limit);
 		postsCount = await postService.getPostsCount({});
-		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all message successed.', data: { posts, postsCount } });
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get all posts successed.', data: { posts, postsCount } });
 	}
 
 	@joiValidation(postSchema)
 	public async update(req: Request, res: Response): Promise<void> {
 		const { postId } = req.params;
-		const { post, profilePicture, bgColor, commentsCount, privacy, image } = req.body;
-		const { userId, username, email, avatarColor } = req.currentUser!;
+		const { post, profilePicture, commentsCount, image } = req.body;
+		const { userId, username, email } = req.currentUser!;
 
 		const updateData = {
 			userId,
 			username,
 			email,
-			avatarColor,
 			profilePicture,
 			post,
-			bgColor,
-			commentsCount,
-			privacy
+			commentsCount
 		} as IPostDocument;
 
 		if (image) {
@@ -110,7 +103,7 @@ export class Post {
 
 		const udpatedPost = await postCache.updatePostsToCache(postId, updateData);
 
-		postSocketIO.emit('post post', udpatedPost);
+		postSocketIO.emit('updatePost', udpatedPost);
 
 		const jobData = { key: postId, value: updateData };
 		postQueue.addPostJob('updatePostToDB', jobData);
@@ -124,10 +117,21 @@ export class Post {
 
 		await postCache.deletePostsFromCache(userId, postId);
 
-		postSocketIO.emit('delete post', postId);
+		postSocketIO.emit('deletePost', postId);
 
 		postQueue.addPostJob('deletePostFromDB', { keyOne: userId, keyTwo: postId });
 
 		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Delete post successfully.' });
+	}
+
+	public async readSingle(req: Request, res: Response): Promise<void> {
+		console.log('readSingle');
+		const { postId } = req.params;
+
+		const postData = (await postCache.getSinglePostFromCache(postId)) || (await postService.getSinglePost(postId));
+
+		if (!postData) res.status(HTTP_STATUS.BAD_REQUEST).json({ status: 'error', message: 'Post not found.' });
+
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get single post successed.', data: { postData } });
 	}
 }

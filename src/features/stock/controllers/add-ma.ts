@@ -1,20 +1,21 @@
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
+import { InferAttributes } from 'sequelize';
 
+import { Ma } from '@stock/models/ma.schema';
 import { maService } from '@service/mysql/ma.service';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
-import { addMaSchema } from '@stock/schemes/add-ma';
+import { createMaSchema } from '@stock/schemes/add-ma';
 
 export class MaAdder {
-	@joiValidation(addMaSchema)
+	@joiValidation(createMaSchema)
 	public async create(req: Request, res: Response): Promise<void | Response> {
-		const { param, tickId } = req.body;
+		const { ma, maBy, breakRatio, color, isAbove, TickId, indicatorType } = req.body;
 
-		const userId = req.currentUser!.userId;
+		const data: InferAttributes<Ma> = { ma: +ma, TickId, maBy, breakRatio, color, isAbove, indicatorType };
 
-		const data = { param: +param, tickId };
 		await maService.createMa(data);
 
-		res.status(HTTP_STATUS.OK).json({ message: 'Set MA successfully.', user: userId });
+		res.status(HTTP_STATUS.OK).json({ message: 'Add price successfully.' });
 	}
 }

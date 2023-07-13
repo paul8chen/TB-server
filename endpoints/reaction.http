@@ -11,8 +11,9 @@ Content-Type:application/json
 withCredentials:true
 
 {
-  "postId": "6487fed19e3ce5c833768d14",
-	"type":"happy",
+	"username":"paul29",
+  "postId": "648d96918519d4750290cfd0",
+	"type":"rocket",
   "profilePicture": "<cloudinary-user-profile-picture-url>"
 }
 

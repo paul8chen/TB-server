@@ -8,7 +8,7 @@ class RedisConnection extends BaseCache<Document> {
 	}
 
 	public async connect(): Promise<void> {
-		await this.client.connect();
+		!this.client.isOpen && (await this.client.connect());
 	}
 }
 

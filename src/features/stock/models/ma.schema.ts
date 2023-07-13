@@ -1,13 +1,19 @@
 import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey } from 'sequelize';
 
 import { mysqlConnection } from '@service/mysql/mysql.connection';
+import { Tick } from '@stock/models/tick.schema';
 
 const { sequelize } = mysqlConnection;
 
 export class Ma extends Model<InferAttributes<Ma>, InferCreationAttributes<Ma>> {
 	declare id?: CreationOptional<string>;
-	declare param: number;
-	declare tickId: ForeignKey<string>;
+	declare indicatorType: string;
+	declare ma: number;
+	declare maBy: string;
+	declare color: string;
+	declare breakRatio: number;
+	declare isAbove: boolean;
+	declare TickId: ForeignKey<Tick['id']>;
 }
 
 Ma.init(
@@ -17,14 +23,33 @@ Ma.init(
 			defaultValue: DataTypes.UUIDV4,
 			primaryKey: true
 		},
-		param: {
-			type: DataTypes.INTEGER.UNSIGNED,
+		indicatorType: {
+			type: DataTypes.STRING,
 			allowNull: false
 		},
-		tickId: {
+		ma: {
+			type: DataTypes.DOUBLE.UNSIGNED,
+			allowNull: false
+		},
+		maBy: {
 			type: DataTypes.STRING,
+			allowNull: false
+		},
+		color: {
+			type: DataTypes.STRING,
+			allowNull: false
+		},
+		breakRatio: {
+			type: DataTypes.FLOAT,
+			allowNull: false
+		},
+		isAbove: {
+			type: DataTypes.BOOLEAN,
 			allowNull: false
 		}
 	},
 	{ tableName: 'ma', sequelize }
 );
+
+Tick.hasMany(Ma, { onDelete: 'CASCADE' });
+Ma.belongsTo(Tick);

@@ -7,6 +7,7 @@ export interface ICommentDocument extends Document {
 	postId: string;
 	comment: string;
 	createdAt?: Date;
+	updatedAt?: Date;
 }
 
 export interface ICommentJob {
