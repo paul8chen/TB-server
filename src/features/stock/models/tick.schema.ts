@@ -1,17 +1,14 @@
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, ForeignKey } from 'sequelize';
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 
 import { mysqlConnection } from '@service/mysql/mysql.connection';
-import { TickCart } from '@stock/models/tickCart.schema';
+
 const { sequelize } = mysqlConnection;
 
 export class Tick extends Model<InferAttributes<Tick>, InferCreationAttributes<Tick>> {
 	declare id?: CreationOptional<string>;
-	declare tick: string;
-	declare open: number;
-	declare close: number;
-	declare low: number;
-	declare high: number;
-	declare TickCartId: ForeignKey<TickCart['id']>;
+	declare tickName: string;
+	declare totalIndicator: number;
+	declare uId: string;
 }
 
 Tick.init(
@@ -21,29 +18,18 @@ Tick.init(
 			defaultValue: DataTypes.UUIDV4,
 			primaryKey: true
 		},
-		open: {
-			type: DataTypes.INTEGER.UNSIGNED,
+		tickName: {
+			type: DataTypes.STRING,
 			allowNull: false
 		},
-		close: {
-			type: DataTypes.INTEGER.UNSIGNED,
+		totalIndicator: {
+			type: DataTypes.INTEGER,
 			allowNull: false
 		},
-		low: {
-			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: false
-		},
-		high: {
-			type: DataTypes.INTEGER.UNSIGNED,
-			allowNull: false
-		},
-		tick: {
+		uId: {
 			type: DataTypes.STRING,
 			allowNull: false
 		}
 	},
-	{ tableName: 'tick', sequelize }
+	{ indexes: [{ unique: true, fields: ['uId'] }], tableName: 'tick', sequelize }
 );
-
-TickCart.hasMany(Tick, { onDelete: 'CASCADE' });
-Tick.belongsTo(TickCart);

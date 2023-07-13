@@ -11,7 +11,6 @@ const authSchema: Schema = new Schema(
 		email: { type: String },
 		password: { type: String },
 		user: { type: String, default: 'user' },
-		avatarColor: { type: String },
 		createdAt: { type: Date, default: Date.now },
 		passwordResetToken: { type: String },
 		passwordResetExpires: { type: Date }

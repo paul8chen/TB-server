@@ -28,15 +28,26 @@ export class Reaction {
 			.json({ status: 'success', message: 'Get all reactions successfully.', reactionDatas, total: reactionDatas.length });
 	}
 
+	public async readByUsername(req: Request, res: Response): Promise<void> {
+		const { username, postId } = req.params;
+
+		if (!username) throw new BadRequestError('username is missing.');
+
+		let reactionData = await reactionCache.getReactionDataFromCache(postId, username);
+		if (!reactionData) reactionData = await reactionService.getReactionByUsername(postId, username);
+
+		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Get post reaction by username successed.', data: { reactionData } });
+	}
+
 	@joiValidation(addReactionSchema)
 	public async create(req: Request, res: Response): Promise<void> {
-		const { username, avatarColor } = req.currentUser!;
+		const { username } = req.currentUser!;
 		const { type, postId, profilePicture } = req.body;
 
-		const reactionData: IReactionDocument = { username, avatarColor, type, postId, profilePicture } as IReactionDocument;
+		const reactionData: IReactionDocument = { username, type, postId, profilePicture } as IReactionDocument;
 
 		const reactions = await reactionCache.addReactionToCache(reactionData);
-
+		console.log('FROM CACHE', typeof reactions);
 		reactionQueue.addReactionJob('addReactionToDB', { reactionData, reactions });
 
 		const notificationJobData: INotificationJobData = {
@@ -55,14 +66,14 @@ export class Reaction {
 
 	@joiValidation(udpateReactionSchema)
 	public async update(req: Request, res: Response): Promise<void> {
-		const { username, avatarColor } = req.currentUser!;
+		const { username } = req.currentUser!;
 		const { type, postId } = req.body;
 
 		const prevReactionData = await reactionCache.getReactionDataFromCache(postId, username);
 		if (!prevReactionData) throw new ServerError('No previous reaction was found. Please try again');
 
 		const { profilePicture } = prevReactionData;
-		const reactionData: IReactionDocument = { username, avatarColor, type, postId, profilePicture } as IReactionDocument;
+		const reactionData: IReactionDocument = { username, type, postId, profilePicture } as IReactionDocument;
 
 		const reactions = await reactionCache.changeReactionToCache(reactionData, prevReactionData);
 

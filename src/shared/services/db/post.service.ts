@@ -10,6 +10,10 @@ class PostService {
 		await Promise.all([post, user]);
 	}
 
+	public async getSinglePost(postId: string): Promise<IPostDocument | null> {
+		return await PostModel.findOne({ _id: postId });
+	}
+
 	public async getPosts(
 		query: IGetPostsQuery,
 		skip: number,
@@ -28,7 +32,7 @@ class PostService {
 	}
 
 	public async deletePost(userId: string, postId: string): Promise<void> {
-		const deletePostQuery = PostModel.deleteOne({ postsCount: postId });
+		const deletePostQuery = PostModel.deleteOne({ _id: postId });
 		const updateUserQuery = UserModel.findOneAndUpdate({ _id: userId }, { $inc: { postsCount: -1 } });
 
 		await Promise.all([deletePostQuery, updateUserQuery]);

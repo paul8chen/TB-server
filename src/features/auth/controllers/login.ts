@@ -32,13 +32,13 @@ export class Login {
 		req.session = { token };
 
 		// 4) Send response with user data and token to client
-		const { uId, email, avatarColor, createdAt } = authData;
-		const clientData = { username, uId, email, avatarColor, createdAt };
+		const { uId, email, createdAt } = authData;
+		const clientData = { username, uId, email, createdAt };
 		res.status(HTTP_STATUS.OK).json({ status: 'success', message: 'Login successfully', data: { user: clientData, token } });
 	}
 
 	private signupToken(data: IAuthDocument, userObjectId: ObjectId): string {
-		const { uId, email, username, avatarColor, user } = data;
+		const { uId, email, username, user } = data;
 
 		const token = jwt.sign(
 			{
@@ -46,8 +46,7 @@ export class Login {
 				user,
 				uId,
 				email,
-				username,
-				avatarColor
+				username
 			},
 			config.JWT_TOKEN
 		);

@@ -7,16 +7,21 @@ class ReactionService {
 		const { postId } = reactionData;
 
 		const updateReactionData = ReactionModel.create(reactionData);
-		const udpatePostReaction = PostModel.findOneAndUpdate({ postId }, { reactions });
+		console.log('FROM DB postId', postId);
+		console.log('FROM DB reactions', reactions);
 
-		await Promise.all([updateReactionData, udpatePostReaction]);
+		const udpatePostReaction = PostModel.findOneAndUpdate({ _id: postId }, { reactions });
+
+		const udpatePostReactionResult = await Promise.all([updateReactionData, udpatePostReaction]);
+
+		console.log('FROM DB results', udpatePostReactionResult);
 	}
 
 	public async updateReaction(reactionData: IReactionDocument, reactions: IReactions): Promise<void> {
 		const { postId, username, type } = reactionData;
 
 		const updateReactionData = ReactionModel.findOneAndUpdate({ postId, username }, { type });
-		const udpatePostReaction = PostModel.findOneAndUpdate({ postId }, { reactions });
+		const udpatePostReaction = PostModel.findOneAndUpdate({ _id: postId }, { reactions });
 
 		await Promise.all([updateReactionData, udpatePostReaction]);
 	}
@@ -25,13 +30,21 @@ class ReactionService {
 		const { postId, username } = reactionData;
 
 		const updateReactionData = ReactionModel.findOneAndDelete({ postId, username });
-		const udpatePostReaction = PostModel.findOneAndUpdate({ postId }, { reactions });
+		const udpatePostReaction = PostModel.findOneAndUpdate({ _id: postId }, { reactions });
 
 		await Promise.all([updateReactionData, udpatePostReaction]);
 	}
 
 	public async getAllReaction(postId: string): Promise<IReactionDocument[]> {
 		return await ReactionModel.find({ postId });
+	}
+
+	public async getReactionByUsername(postId: string, username: string): Promise<IReactionDocument | void> {
+		const reactionData = await ReactionModel.findOne({ postId, username });
+
+		if (!reactionData) return;
+
+		return reactionData;
 	}
 }
 

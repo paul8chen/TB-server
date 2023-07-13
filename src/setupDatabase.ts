@@ -24,13 +24,13 @@ export default async () => {
 	const connect = async () => {
 		await mongoose.connect(config.DATABASE_URL);
 		await mysqlConnection.connect();
-		await mysqlConnection.init();
+		// await mysqlConnection.init();
 		await redisConnection.connect();
 
 		// await mysqlConnection.sequelize.sync({ force: true });
-		await tickCartService.syncTable();
-		await tickService.syncTable();
-		await Promise.all([stockService.syncTable(), priceService.syncTable(), maService.syncTable()]);
+		// await tickCartService.syncTable();
+		// await tickService.syncTable();
+		// await Promise.all([stockService.syncTable(), priceService.syncTable(), maService.syncTable()]);
 	};
 
 	await connect();

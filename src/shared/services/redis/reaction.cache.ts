@@ -87,7 +87,7 @@ export class ReactionCache extends BaseCache<IReactionDocument> {
 		throw new ServerError('Update reaction failed. Please try again.');
 	}
 
-	public async getReactionDataFromCache(postId: string, username: string): Promise<IReactionDocument | undefined> {
+	public async getReactionDataFromCache(postId: string, username: string): Promise<IReactionDocument | void> {
 		const reactionDatas = await this.client.lRange(`reactions:${postId}`, 0, -1);
 
 		const matchedReactionData = reactionDatas.find((reactionData) => {

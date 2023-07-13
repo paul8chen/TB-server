@@ -1,4 +1,4 @@
-import { InferAttributes, Op } from 'sequelize';
+import { InferAttributes } from 'sequelize';
 
 import { BaseService } from './base.service';
 import { Tick } from '@stock/models/tick.schema';
@@ -13,8 +13,12 @@ class TickService extends BaseService<typeof Tick> {
 		return await Tick.create(data);
 	}
 
-	public async deleteTickByTickNameAndTickCartId(tick: string, TickCartId: string): Promise<void> {
-		await Tick.destroy({ where: { [Op.and]: [{ tick }, { TickCartId }] } });
+	public async getTickByUserId(uId: string): Promise<Tick[]> {
+		return await Tick.findAll({ attributes: ['id', 'tickName', 'totalIndicator'], where: { uId } });
+	}
+
+	public async deleteTickByTickId(id: string): Promise<void> {
+		await Tick.destroy({ where: { id } });
 	}
 }
 

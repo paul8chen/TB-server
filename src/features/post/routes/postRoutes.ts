@@ -12,6 +12,7 @@ class PostRoute {
 	public routes(): Router {
 		this.router.post('/create-post', Post.prototype.create);
 		this.router.get('/get-post/:page', Post.prototype.read);
+		this.router.get('/get-post-single/:postId', Post.prototype.readSingle);
 		this.router.patch('/update-post/:postId', Post.prototype.update);
 		this.router.delete('/delete-post/:postId', Post.prototype.delete);
 

@@ -41,11 +41,7 @@ export abstract class BaseCache<T extends Document> {
 	protected serialize(data: T): SerializedData {
 		const serializedData: SerializedData = {};
 		for (const [key, value] of Object.entries(data)) {
-			if (value instanceof Object) {
-				serializedData[key] = JSON.stringify(value);
-			} else {
-				serializedData[key] = `${value}`;
-			}
+			serializedData[key] = value instanceof Object ? JSON.stringify(value) : `${value}`;
 		}
 
 		return serializedData;

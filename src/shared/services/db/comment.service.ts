@@ -12,15 +12,6 @@ class CommentService {
 
 		const udpatePostQuery = PostModel.findOneAndUpdate({ _id: postId }, { $inc: { commentsCount: 1 } }, { new: true });
 
-		// For Notification featre...
-		// const getUserQuery = PostModel.aggregate([
-		// 	{ $match: { _id: postId } },
-		// 	{ $lookup: { from: 'User', localField: 'username', foreignField: 'username', as: 'user' } },
-		// 	{ $project: { user: 1 } }
-		// ]);
-
-		// const userData = (await Promise.all([createCommentQuery, udpatePostQuery, getUserQuery]))[-1];
-
 		await Promise.all([createCommentQuery, udpatePostQuery]);
 	}
 
@@ -28,11 +19,15 @@ class CommentService {
 		query: IGetCommentQuery,
 		skip: number,
 		limit: number,
-		sort: { [key: string]: 1 | -1 } = { createdAt: -1 }
+		sort: { [key: string]: 1 | -1 } = { createdAt: 1 }
 	): Promise<ICommentDocument[]> {
 		const commentDatas = await CommentModel.find(query, { __v: 0 }, { skip, limit, sort });
 
 		return commentDatas;
+	}
+
+	public async getTotalComment(postId: string): Promise<number> {
+		return await CommentModel.countDocuments({ postId });
 	}
 
 	public async getComment(query: IGetCommentQuery): Promise<ICommentDocument> {
@@ -57,6 +52,19 @@ class CommentService {
 		]);
 
 		return commentDatas[0];
+	}
+
+	public async updateCommentByPostIdAndCommentId(commentData: ICommentDocument): Promise<void> {
+		const { postId, _id } = commentData;
+
+		await CommentModel.updateOne({ postId, _id: _id }, { $set: commentData });
+	}
+
+	public async deleteCommentByPostIdAndCommentId(postId: string, commentId: string): Promise<void> {
+		const deleteQuery = CommentModel.deleteOne({ postId, _id: commentId });
+		const updateQuery = PostModel.updateOne({ _id: postId }, { $inc: { commentsCount: -1 } });
+
+		await Promise.all([deleteQuery, updateQuery]);
 	}
 }
 

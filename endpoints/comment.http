@@ -1,7 +1,7 @@
 @urlPath=api/v1/comment
 
 ### Get all comments
-GET {{baseUrl}}/{{urlPath}}/all-comments/647c6df9dc26ad6560886a47
+GET {{baseUrl}}/{{urlPath}}/all-comments/648d96918519d4750290cfd0/1
 Content-Type:application/json
 withCredentials:true
 
@@ -11,8 +11,8 @@ Content-Type:application/json
 withCredentials:true
 
 {
-  "postId": "6487fed19e3ce5c833768d14",
-	"comment":"test comment4030 ttteste dag G RRRANDOM STRING"
+  "postId": "648d96918519d4750290cfd0",
+	"comment":"test1"
 }
 
 ### Get comment
@@ -25,5 +25,24 @@ GET {{baseUrl}}/{{urlPath}}/name-lists/647c6df9dc26ad6560886a47
 Content-Type:application/json
 withCredentials:true
 
+### Update comment
+PATCH {{baseUrl}}/{{urlPath}}/update-comment
+Content-Type:application/json
+withCredentials:true
 
+{
+  "postId": "648d96918519d4750290cfd0",
+	"comment":"test3",
+	"_Id":"6492a3b19e1e24501eefa014"
+}
 
+### Delete comment
+DELETE {{baseUrl}}/{{urlPath}}/delete-comment
+Content-Type:application/json
+withCredentials:true
+
+{
+  "postId": "648d96918519d4750290cfd0",
+	"comment":"test3",
+	"_id":"6492a04a03e468f244f1db3a"
+}
